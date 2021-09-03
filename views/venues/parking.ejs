@@ -1,0 +1,27 @@
+<% layout('layouts/boilerplate')%>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="/venues/<%=venue._id%>">Reviews</a>
+        </li>
+        <li class="nav-item">
+        <li class="nav-item">
+            <a class="nav-link" href="/venues/<%=venue._id%>/equipment">Equipment</a>
+        </li>
+        <a class="nav-link" href="/venues/<%=venue._id%>/greenRoom">Green Room</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/venues/<%=venue._id%>/parking">Parking</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/venues/<%=venue._id%>/food">Food</a>
+        </li>
+    </ul>
+
+    <h1>
+        <%=venue.title%> Parking
+    </h1>
+    <h2>
+        <%=venue.parking%>
+    </h2>
+    <a href="/venues/<%= venue._id %>">Back to Venue</a>
