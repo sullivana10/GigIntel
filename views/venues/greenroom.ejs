@@ -1,14 +1,14 @@
 <% layout('layouts/boilerplate')%>
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-pills nav-justified flex-column flex-sm-row mb-3">
         <li class="nav-item">
             <a class="nav-link" href="/venues/<%=venue._id%>">Reviews</a>
         </li>
         <li class="nav-item">
-        <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/venues/<%=venue._id%>/equipment">Equipment</a>
+            <a class="nav-link" href="/venues/<%=venue._id%>/equipment">Equipment</a>
         </li>
-        <a class="nav-link active" href="/venues/<%=venue._id%>/greenRoom">Green Room</a>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/venues/<%=venue._id%>/greenRoom">Green Room</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/venues/<%=venue._id%>/parking">Parking</a>
@@ -18,10 +18,24 @@
         </li>
     </ul>
 
-    <h1>
-        <%=venue.title%> Green Room
-    </h1>
-    <h2>
-        <%=venue.greenRoom%>
-    </h2>
-    <a href="/venues/<%= venue._id %>">Back to Venue</a>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card mb-3">
+                <img src="<%= venue.greenRoomImage %>" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%=venue.title%> Green Room
+                    </h5>
+                    <p class="card-text">
+                        <%=venue.greenRoom%>
+                    </p>
+                </div>
+                <div class="card-body">
+                    <a class="card-link btn btn-info" href="/venues/<%=venue._id%>/greenRoomEdit">Edit</a>
+                </div>
+                <div class="card-footer text-muted">
+                    2 days ago
+                </div>
+            </div>
+        </div>
+    </div>

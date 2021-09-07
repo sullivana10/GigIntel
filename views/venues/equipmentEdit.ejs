@@ -3,16 +3,22 @@
     <div class="row">
         <h1 class="text-center">Edit Equipment</h1>
         <div class="col-6 offset-3">
-            <form action="/venues/<%=venue._id%>?_method=PUT" method="POST">
+            <form action="/venues/<%=venue._id%>?_method=PUT" method="POST" novalidate class="validated-form">
                 <div class="mb-3">
                     <label class="form-label" for="equipmentImage">Equipment Image Url</label>
                     <input class="form-control" type="text" id="equipmentImage" name="venue[equipmentImage]"
-                        value="<%=venue.equipmentImage%>">
+                        value="<%=venue.equipmentImage%>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="equipment">Equipment List</label>
-                    <textarea class="form-control" type="text" id="equipment"
-                        name="venue[equipment]"><%=venue.equipment%> </textarea>
+                    <textarea class="form-control" type="text" id="equipment" name="venue[equipment]"
+                        required><%=venue.equipment%></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3"><button class="btn btn-info">Update Venue</button></div>
             </form>

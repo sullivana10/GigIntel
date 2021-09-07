@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
+const Joi = require('joi');
+const catchAsync = require('./utils/catchAsync');
+const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Venue = require('./models/venue');
 
@@ -30,62 +33,98 @@ app.use(methodOverride('_method'));
 app.get('/', (req, res) => {
     res.render('home')
 });
-app.get('/venues', async (req, res) => {
+app.get('/venues', catchAsync(async (req, res) => {
     const venues = await Venue.find({});
     res.render('venues/index', { venues });
-});
+}));
 
 app.get('/venues/new', (req, res) => {
     res.render('venues/new');
 })
 
-app.get('/venues/:id/equipment', async (req, res) => {
+app.get('/venues/:id/equipment', catchAsync(async (req, res) => {
     const venue = await Venue.findById(req.params.id)
     res.render('venues/equipment', { venue });
-})
-app.get('/venues/:id/greenRoom', async (req, res) => {
+}))
+app.get('/venues/:id/greenRoom', catchAsync(async (req, res) => {
     const venue = await Venue.findById(req.params.id)
     res.render('venues/greenRoom', { venue });
-})
-app.get('/venues/:id/parking', async (req, res) => {
+}));
+app.get('/venues/:id/parking', catchAsync(async (req, res) => {
     const venue = await Venue.findById(req.params.id)
     res.render('venues/parking', { venue });
-})
-app.get('/venues/:id/food', async (req, res) => {
+}));
+app.get('/venues/:id/food', catchAsync(async (req, res) => {
     const venue = await Venue.findById(req.params.id)
     res.render('venues/food', { venue });
-})
+}));
 
-app.post('/venues', async (req, res) => {
+app.post('/venues', catchAsync(async (req, res, next) => {
+    //if (!req.body.venue) throw new ExpressError('Invalid Venue Data', 400);
+    const venueSchema = Joi.object({
+        venue: Joi.object({
+            title: Joi.string().required(),
+            image: Joi.string().required(),
+            location: Joi.string().required(),
+            description: Joi.string().required()
+        }).required()
+    })
+    const { error } = venueSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    }
     const venue = new Venue(req.body.venue);
     await venue.save();
     res.redirect(`/venues/${venue._id}`)
-})
+}));
 
-app.get('/venues/:id', async (req, res) => {
+app.get('/venues/:id', catchAsync(async (req, res) => {
     const venue = await Venue.findById(req.params.id)
     res.render('venues/show', { venue });
-});
+}));
 
-app.get('/venues/:id/edit', async (req, res) => {
+app.get('/venues/:id/edit', catchAsync(async (req, res) => {
     const venue = await Venue.findById(req.params.id)
     res.render('venues/edit', { venue });
-})
-app.get('/venues/:id/equipmentEdit', async (req, res) => {
+}));
+app.get('/venues/:id/equipmentEdit', catchAsync(async (req, res) => {
     const venue = await Venue.findById(req.params.id)
     res.render('venues/equipmentEdit', { venue });
-})
+}));
+app.get('/venues/:id/greenRoomEdit', catchAsync(async (req, res) => {
+    const venue = await Venue.findById(req.params.id)
+    res.render('venues/greenRoomEdit', { venue });
+}));
+app.get('/venues/:id/parkingEdit', catchAsync(async (req, res) => {
+    const venue = await Venue.findById(req.params.id)
+    res.render('venues/parkingEdit', { venue });
+}));
+app.get('/venues/:id/foodEdit', catchAsync(async (req, res) => {
+    const venue = await Venue.findById(req.params.id)
+    res.render('venues/foodEdit', { venue });
+}));
 
-app.put('/venues/:id', async (req, res) => {
+app.put('/venues/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const venue = await Venue.findByIdAndUpdate(id, { ...req.body.venue });
     res.redirect(`/venues/${venue._id}`)
-})
+}));
 
-app.delete('/venues/:id', async (req, res) => {
+app.delete('/venues/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Venue.findByIdAndDelete(id);
     res.redirect('/venues');
+}));
+
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404))
+})
+
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Oh no, something went wrong!'
+    res.status(statusCode).render('error', { err })
 })
 
 app.listen(3000, () => {

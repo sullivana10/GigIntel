@@ -3,24 +3,38 @@
     <div class="row">
         <h1 class="text-center">Edit Venue</h1>
         <div class="col-6 offset-3">
-            <form action="/venues/<%=venue._id%>?_method=PUT" method="POST">
+            <form action="/venues/<%=venue._id%>?_method=PUT" method="POST" novalidate class="validated-form">
                 <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
-                    <input class="form-control" type="text" id="title" name="venue[title]" value="<%=venue.title%>">
+                    <input class="form-control" type="text" id="title" name="venue[title]" value="<%=venue.title%>"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="location">Location</label>
                     <input class="form-control" type="text" id="location" name="venue[location]"
-                        value="<%=venue.location%>">
+                        value="<%=venue.location%>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="image">Image Url</label>
-                    <input class="form-control" type="text" id="image" name="venue[image]" value="<%=venue.image%>">
+                    <input class="form-control" type="text" id="image" name="venue[image]" value="<%=venue.image%>"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" type="text" id="description"
-                        name="venue[description]"><%=venue.description%> </textarea>
+                    <textarea class="form-control" type="text" id="description" name="venue[description]" required>
+                    <%=venue.description%></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3"><button class="btn btn-info">Update Venue</button></div>
             </form>

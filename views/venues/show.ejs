@@ -1,14 +1,14 @@
 <% layout('layouts/boilerplate')%>
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-pills nav-justified flex-column flex-sm-row mb-3">
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/venues/<%=venue._id%>">Reviews</a>
         </li>
         <li class="nav-item">
-        <li class="nav-item">
             <a class="nav-link" href="/venues/<%=venue._id%>/equipment">Equipment</a>
         </li>
-        <a class="nav-link" href="/venues/<%=venue._id%>/greenRoom">Green Room</a>
+        <li class="nav-item">
+            <a class="nav-link" href="/venues/<%=venue._id%>/greenRoom">Green Room</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/venues/<%=venue._id%>/parking">Parking</a>
@@ -18,22 +18,32 @@
         </li>
     </ul>
 
-    <h1>
-        <%= venue.title %>
-    </h1>
-    <h2>
-        <%= venue.location %>
-    </h2>
-    <img src="<%= venue.image %>" alt="">
-    <p>
-        <%= venue.description %>
-    </p>
-    <p>
-    <p><a href="/venues/<%=venue._id%>/edit">Edit</a></p>
-    <form action="/venues/<%=venue._id%>?_method=DELETE" method="POST">
-        <button>Delete</button>
-    </form>
-    </p>
-    <footer>
-        <a href="/venues">All Venues</a>
-    </footer>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card mb-3">
+                <img src="<%= venue.image %>" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= venue.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= venue.description %>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= venue.location %>
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <a class="card-link btn btn-info" href="/venues/<%=venue._id%>/edit">Edit</a>
+                    <form class="d-inline" action="/venues/<%=venue._id%>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+                <div class="card-footer text-muted">
+                    2 days ago
+                </div>
+            </div>
+        </div>
+    </div>
