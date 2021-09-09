@@ -2,11 +2,12 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const Joi = require('joi');
+const { venueSchema, reviewSchema } = require('./schemas.js');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const Venue = require('./models/venue');
+const Review = require('./models/review');
 
 mongoose.connect('mongodb://localhost:27017/venue', {
     useNewUrlParser: true,
@@ -29,6 +30,26 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+
+const validateVenue = (req, res, next) => {
+    const { error } = venueSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -59,28 +80,15 @@ app.get('/venues/:id/food', catchAsync(async (req, res) => {
     res.render('venues/food', { venue });
 }));
 
-app.post('/venues', catchAsync(async (req, res, next) => {
+app.post('/venues', validateVenue, catchAsync(async (req, res, next) => {
     //if (!req.body.venue) throw new ExpressError('Invalid Venue Data', 400);
-    const venueSchema = Joi.object({
-        venue: Joi.object({
-            title: Joi.string().required(),
-            image: Joi.string().required(),
-            location: Joi.string().required(),
-            description: Joi.string().required()
-        }).required()
-    })
-    const { error } = venueSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400)
-    }
     const venue = new Venue(req.body.venue);
     await venue.save();
     res.redirect(`/venues/${venue._id}`)
 }));
 
 app.get('/venues/:id', catchAsync(async (req, res) => {
-    const venue = await Venue.findById(req.params.id)
+    const venue = await Venue.findById(req.params.id).populate('reviews');
     res.render('venues/show', { venue });
 }));
 
@@ -105,11 +113,27 @@ app.get('/venues/:id/foodEdit', catchAsync(async (req, res) => {
     res.render('venues/foodEdit', { venue });
 }));
 
-app.put('/venues/:id', catchAsync(async (req, res) => {
+app.put('/venues/:id', validateVenue, catchAsync(async (req, res) => {
     const { id } = req.params;
     const venue = await Venue.findByIdAndUpdate(id, { ...req.body.venue });
     res.redirect(`/venues/${venue._id}`)
 }));
+
+app.post('/venues/:id/reviews', validateReview, catchAsync(async (req, res) => {
+    const venue = await Venue.findById(req.params.id);
+    const review = new Review(req.body.review);
+    venue.reviews.push(review);
+    await review.save();
+    await venue.save();
+    res.redirect(`/venues/${venue._id}`);
+}))
+
+app.delete('/venues/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Venue.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/venues/${id}`);
+}))
 
 app.delete('/venues/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
