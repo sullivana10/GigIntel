@@ -15,6 +15,10 @@ const VenueSchema = new Schema({
     greenRoom: String,
     parking: String,
     food: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [
         {
             type: Schema.Types.ObjectId,
