@@ -2,7 +2,6 @@ const Joi = require('joi');
 
 module.exports.venueSchema = Joi.object({
     venue: Joi.object({
-        price: Joi.number().required().min(0),
         title: Joi.string().required(),
         image: Joi.string().required(),
         location: Joi.string().required(),
