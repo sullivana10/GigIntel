@@ -1,4 +1,5 @@
 const Venue = require('../models/venue');
+const { cloudinary } = require('../cloudinary');
 
 module.exports.index = async (req, res) => {
     const venues = await Venue.find({});
@@ -31,6 +32,7 @@ module.exports.food = async (req, res) => {
 
 module.exports.createVenue = async (req, res, next) => {
     const venue = new Venue(req.body.venue);
+    venue.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     venue.author = req.user._id;
     await venue.save();
     req.flash('success', 'Successfully made a new venue!')
@@ -84,6 +86,15 @@ module.exports.foodEdit = async (req, res) => {
 module.exports.updateVenue = async (req, res) => {
     const { id } = req.params;
     const venue = await Venue.findByIdAndUpdate(id, { ...req.body.venue });
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    venue.images.push(...imgs);
+    await venue.save();
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await venue.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+    }
     req.flash('success', 'Successfully updated venue!');
     res.redirect(`/venues/${venue._id}`)
 }
