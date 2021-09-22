@@ -4,7 +4,6 @@ const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware');
 const Venue = require('../models/venue');
 const Review = require('../models/review');
 const reviews = require('../controllers/reviews');
-
 const ExpressError = require('../utils/ExpressError');
 const catchAsync = require('../utils/catchAsync');
 
