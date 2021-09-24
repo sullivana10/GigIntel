@@ -1,4 +1,7 @@
 const Venue = require('../models/venue');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const { cloudinary } = require('../cloudinary');
 
 module.exports.index = async (req, res) => {
@@ -31,7 +34,12 @@ module.exports.food = async (req, res) => {
 }
 
 module.exports.createVenue = async (req, res, next) => {
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.venue.location,
+        limit: 1
+    }).send()
     const venue = new Venue(req.body.venue);
+    venue.geometry = geoData.body.features[0].geometry;
     venue.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     venue.author = req.user._id;
     await venue.save();

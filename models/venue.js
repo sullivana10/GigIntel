@@ -11,9 +11,22 @@ ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
+const opts = { toJSON: { virtuals: true } };
+
 const VenueSchema = new Schema({
     title: String,
     images: [ImageSchema],
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     equipmentImage: String,
     greenRoomImage: String,
     parkingImage: String,
@@ -34,6 +47,12 @@ const VenueSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, opts);
+
+VenueSchema.virtual('properties.popUpMarkup').get(function () {
+    return `
+    <strong><a href="/venues/${this._id}">${this.title}</a><strong>
+    <p>${this.description.substring(0, 20)}...</p>`
 });
 
 VenueSchema.post('findOneAndDelete', async function (doc) {

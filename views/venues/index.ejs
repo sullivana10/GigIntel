@@ -1,13 +1,19 @@
 <% layout('layouts/boilerplate')%>
+    <div id="map" style="width: 100%; height: 500px"></div>
     <h1>All Venues</h1>
     <div>
         <a href="/venues/new">Add Venue</a>
     </div>
-    <% for (let venue of venues){%>
-        <div class="card" mb-3>
+    <% for (let venue of venues) {%>
+        <div class="card mb-3">
             <div class="row">
                 <div class="col-md-4">
-                    <img class="img-fluid" alt="" src="<%=venue.images[0].url%>">
+                    <%if(venue.images.length) {%>
+                        <img class="img-fluid" alt="" src="<%=venue.images[0].url%>">
+                        <% }else {%>
+                            <img class="img-fluid" alt=""
+                                src="https://res.cloudinary.com/sullivana10/image/upload/v1632340082/GigIntel/mzqhw3mv0dulrka537xz.jpg">
+                            <% } %>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -28,3 +34,9 @@
             </div>
         </div>
         <% }%>
+            <script>
+                const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+                const venues = {features: <%- JSON.stringify(venues) %>}
+            </script>
+
+            <script src="/javascripts/clusterMap.js"></script>
