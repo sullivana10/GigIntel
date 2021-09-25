@@ -22,7 +22,7 @@ router.route('/:id')
 
 router.get('/:id/equipment', catchAsync(venues.equipment))
 
-router.get('/:id/greenRoom', catchAsync(venues.greenRoom));
+router.get('/:id/greenroom', catchAsync(venues.greenroom));
 
 router.get('/:id/parking', catchAsync(venues.parking));
 
@@ -32,7 +32,7 @@ router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(venues.renderEditForm))
 
 router.get('/:id/equipmentEdit', isLoggedIn, isAuthor, catchAsync(venues.equipmentEdit));
 
-router.get('/:id/greenRoomEdit', isLoggedIn, isAuthor, catchAsync(venues.greenRoomEdit));
+router.get('/:id/greenroomEdit', isLoggedIn, isAuthor, catchAsync(venues.greenroomEdit));
 
 router.get('/:id/parkingEdit', isLoggedIn, isAuthor, catchAsync(venues.parkingEdit));
 
