@@ -1,5 +1,20 @@
 # GigIntel
 
+## Description
+
+GigIntel was created by a touring musician for touring musicians.
+The purpose of GigIntel is to provide users with all the info 
+they need to feel confident and comfortable in a new venue on the road.
+
+**Users can:**
+
+- Search a specific venue
+- View the venue on a map
+- Gather info such as parking, food, equipment, and accommodations.
+- Rate/Review their experience at the venue
+
+
+
 ## Screenshots
 
 Landing Page:
