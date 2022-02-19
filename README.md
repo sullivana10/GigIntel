@@ -15,15 +15,15 @@ they need to feel confident and comfortable in a new venue on the road.
 
 ## Built With
 
-[Node.js](https://nodejs.org)
+- [Node.js](https://nodejs.org)
 
-[Express](https://expressjs.com)
+- [Express](https://expressjs.com)
 
-[EJS](https://ejs.co)
+- [EJS](https://ejs.co)
 
-[MongoDB](https://www.mongodb.com)
+- [MongoDB](https://www.mongodb.com)
 
-[Bootstrap](https://getbootstrap.com)
+- [Bootstrap](https://getbootstrap.com)
 
 ## Screenshots
 
