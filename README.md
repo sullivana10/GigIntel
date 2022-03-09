@@ -27,7 +27,7 @@ they need to feel confident and comfortable in a new venue on the road.
 
 ## Screenshots
 
-Landing Page:
+Home Page:
 
 ![Imgur](https://i.imgur.com/FG0ct7D.png)
 
